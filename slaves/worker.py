@@ -29,7 +29,7 @@ def run():
     while True:
         url = r.lpop(queue_name)
         if url == None:
-            time.sleep(3)
+            time.sleep(2)
             continue
         url = url.decode("UTF-8")
         count = r.get(counter_name).decode('UTF-8')
@@ -43,19 +43,36 @@ def run():
         except:
             continue
         
-        urls = extracter.extract_urls(page.text, 'a', 'href')
-        for x in urls:
-            if restict_str in x:
-                if r.sadd(set_name,"https:" + x) == 1:
-                    r.rpush(queue_name,"https:" + x)
+        #提取网页链接
+#         urls = extracter.extract_urls(page.text, 'a', 'href')
+#         for x in urls:
+#             if restict_str in x:
+#                 if r.sadd(set_name, x) == 1:
+#                     r.rpush(queue_name, x)
                     
-        links = extracter.extract_urls(page.text, 'img', 'src')
-        for x in links:
-            fname = tool.url_replace(x)
-            print("正在保存图片 -->https:" + x)
-            try:
-                handler.save_file_binary(file_path + fname +".jpg", s.get("https:" + x, timeout = 2).content)
-            except:
-                continue
+        #提取网页链接(货币网)
+        try:
+            urls = extracter.extract_urls(page.text, 'a', 'href')
+            for x in urls:
+                if restict_str not in x:
+                    x = "http://www.chinamoney.com.cn" + x
+                    if r.sadd(set_name, x) == 1:
+                        r.rpush(queue_name, x)
+        except:
+            pass
+        
+        #下载网页准备处理
+        fname = tool.url_replace(url)            
+        handler.saveToFile(file_path + fname + '.html', page.text)
+                    
+                    
+#         links = extracter.extract_urls(page.text, 'img', 'src')
+#         for x in links:
+#             fname = tool.url_replace(x)
+#             print("正在保存图片 -->https:" + x)
+#             try:
+#                 handler.save_file_binary(file_path + fname +".jpg", s.get("https:" + x, timeout = 2).content)
+#             except:
+#                 continue
             
     

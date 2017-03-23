@@ -13,6 +13,7 @@ queue = deque()
 visited = set()
 
 init_url = "http://www.badtom.cn"
+
 queue.append(init_url)
 visited.add(init_url)
 #通过头信息伪装成火狐浏览器
@@ -23,7 +24,7 @@ headinfo = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko'
 }
 
-filePath = 'C:/d/spider/'
+filePath = 'C:/d/spider/standalone/'
 count = 0
 start_time = arrow.now().timestamp
 

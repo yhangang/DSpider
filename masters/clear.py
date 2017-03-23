@@ -14,11 +14,12 @@ set_name = cf.get("conf", "set_name")
 counter_name = cf.get("conf", "counter_name")
 init_page = cf.get("conf", "init_page")
 
-#输出当前工作状态
+#初始化当前工作状态
 r = redis.StrictRedis(host=redis_host, port=redis_port) 
 r.delete(queue_name)
 r.delete(set_name)
 r.delete(counter_name)
+r.set(counter_name,0)
 
-print("工作状态已清空！")
+print("工作状态已初始化！")
 
